@@ -1,6 +1,6 @@
 {
   "name": "hugo-lyra",
-  "version": "0.0.0-development",
+  "version": "0.1.0",
   "description": "Node module for creating lyra search indexes for static Hugo sites",
   "main": "./dist/cjs/hugo-lyra.js",
   "module": "./dist/esm/hugo-lyra.js",
@@ -8,6 +8,9 @@
   "bin": {
     "hugo-lyra": "dist/cjs/cli.js"
   },
+  "files": [
+    "dist"
+  ],
   "scripts": {
     "commit": "lint-staged && cz",
     "lint": "eslint src tests --max-warnings 0 --no-ignore --ext .js,.ts,.mjs,.jsx,.tsx",
