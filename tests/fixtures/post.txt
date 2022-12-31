@@ -1,0 +1,1 @@
+How to use it? Once installed brew and started the launchd service: You need to create a configuration file in one of the following locations (in order of preference):
