@@ -1,6 +1,6 @@
 {
   "name": "hugo-lyra",
-  "version": "0.0.0-development",
+  "version": "0.1.0",
   "description": "Node module for creating lyra search indexes for static Hugo sites",
   "main": "./dist/cjs/hugo-lyra.js",
   "module": "./dist/esm/hugo-lyra.js",
@@ -8,6 +8,9 @@
   "bin": {
     "hugo-lyra": "dist/cjs/cli.js"
   },
+  "files": [
+    "dist"
+  ],
   "scripts": {
     "commit": "lint-staged && cz",
     "lint": "eslint src tests --max-warnings 0 --no-ignore --ext .js,.ts,.mjs,.jsx,.tsx",
@@ -21,8 +24,7 @@
     "build:module": "tsc --project tsconfig.esm.json",
     "build:all": "rimraf ./dist && concurrently 'npm:build:module' 'npm:build:cjs'",
     "ci": "npm run build && npm run test:ci",
-    "release": "release-it",
-    "semantic-release": "semantic-release"
+    "release": "release-it"
   },
   "lint-staged": {
     "*.ts": "npm run lint"
@@ -51,10 +53,7 @@
   },
   "homepage": "https://github.com/paolomainardi/hugo-lyra#readme",
   "devDependencies": {
-    "@semantic-release/changelog": "^6.0.2",
-    "@semantic-release/commit-analyzer": "semantic-release/commit-analyzer",
-    "@semantic-release/git": "^10.0.1",
-    "@semantic-release/release-notes-generator": "^10.0.3",
+    "@release-it/conventional-changelog": "^5.1.1",
     "@types/debug": "^4.1.7",
     "@types/html-to-text": "^8.1.1",
     "@types/lodash": "^4.14.191",
@@ -73,8 +72,6 @@
     "prettier": "^2.8.1",
     "release-it": "^15.6.0",
     "rimraf": "^3.0.2",
-    "semantic-release": "^19.0.5",
-    "semantic-release-cli": "^5.4.4",
     "tap": "^16.3.2",
     "ts-node": "^10.9.1",
     "typescript": "^4.9.4"

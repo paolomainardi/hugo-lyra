@@ -2,6 +2,11 @@ name: Publish a Release
 
 on:
   workflow_dispatch:
+    inputs:
+      releaseit_extra_args:
+        description: "The release-it extra args"
+        required: false
+        default: ""
     branches:
       - main
       - beta
@@ -29,4 +34,4 @@ jobs:
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           NPM_TOKEN: ${{ secrets.NPM_TOKEN }}
-        run: npx semantic-release
+        run: npx release -- ${{ github.event.inputs.releaseit_extra_args }}
