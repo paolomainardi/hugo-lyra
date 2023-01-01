@@ -1,5 +1,12 @@
 # Changelog
 
+## [0.1.0-beta.1](https://github.com/paolomainardi/hugo-lyra/compare/0.1.0-beta.0...0.1.0-beta.1) (2023-01-01)
+
+
+### Bug Fixes
+
+* missing lodash ([#12](https://github.com/paolomainardi/hugo-lyra/issues/12)) ([f2af28d](https://github.com/paolomainardi/hugo-lyra/commit/f2af28d1989002d9fbed3f2a974971c49f0ed8cf))
+
 ## 0.1.0-beta.0 (2023-01-01)
 
 
