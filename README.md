@@ -1,8 +1,10 @@
 # Hugo-Lyra
 
+[![Tests](https://github.com/paolomainardi/hugo-lyra/actions/workflows/tests.yml/badge.svg)](https://github.com/paolomainardi/hugo-lyra/actions/workflows/tests.yml)
+
 [Hugo][1] is a fantastic static site generator and, like most of them, is not natively capable of implementing a dynamic search engine like we are used to using on more traditional server-side platforms, with more or less advanced query capabilities.
 
-This project aims to precisely solve this problem by integrating the [Lyra search engine][2] with Hugo.
+This project aims to precisely solve this problem by integrating the uber-cool [Lyra search engine][2] with Hugo.
 
 It works by parsing the `content/\*\*/\*.md` files into raw text and using it to generate a Lyra index,
 which will become a static asset you can publish alongside the other files.
