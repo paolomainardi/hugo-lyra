@@ -4,9 +4,10 @@
   "description": "Node module for creating lyra search indexes for static Hugo sites",
   "main": "./dist/cjs/hugo-lyra.js",
   "module": "./dist/esm/hugo-lyra.js",
+  "browser": "./dist/browser/hugo-lyra-browser.js",
   "types": "./dist/esm/hugo-lyra.d.ts",
   "bin": {
-    "hugo-lyra": "dist/cjs/cli.js"
+    "hugo-lyra": "./dist/cjs/cli.js"
   },
   "files": [
     "dist"
@@ -22,7 +23,8 @@
     "build": "npm run build:all",
     "build:cjs": "tsc --project tsconfig.cjs.json",
     "build:module": "tsc --project tsconfig.esm.json",
-    "build:all": "rimraf ./dist && concurrently 'npm:build:module' 'npm:build:cjs'",
+    "build:browser": "tsc --project tsconfig.browser.json",
+    "build:all": "rimraf ./dist && concurrently 'npm:build:module' 'npm:build:cjs' 'npm:build:browser'",
     "ci": "npm run build && npm run test:ci",
     "release": "release-it"
   },

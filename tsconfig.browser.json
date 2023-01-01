@@ -1,0 +1,10 @@
+{
+  "extends": "./tsconfig.json",
+  "include": ["src/browser"],
+  "compilerOptions": {
+    "allowJs": true,
+    "target": "ES2019",
+    "module": "CommonJS",
+    "outDir": "./dist/browser"
+  }
+}
