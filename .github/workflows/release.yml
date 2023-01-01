@@ -19,6 +19,12 @@ jobs:
         uses: actions/checkout@v2
         with:
           fetch-depth: 0
+
+     - name: git config
+        run: |
+          git config user.name "${GITHUB_ACTOR}"
+          git config user.email "${GITHUB_ACTOR}@users.noreply.github.com"
+
       - uses: actions/setup-node@v3
         with:
           node-version: 18
@@ -30,14 +36,15 @@ jobs:
       - name: Run tests
         run: yarn ci
 
-      - name: Print release bump
+      - name: Authenticate to NPM.
         env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           NPM_TOKEN: ${{ secrets.NPM_TOKEN }}
+        run: npm config set //registry.npmjs.org/:_authToken $NPM_TOKEN
+
+      - name: Print release bump
         run: npm run release -- ${{ github.event.inputs.releaseit_extra_args }} --release-version
 
       - name: Release
+        run: npm run release -- ${{ github.event.inputs.releaseit_extra_args }}
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-          NPM_TOKEN: ${{ secrets.NPM_TOKEN }}
-        run: npm run release -- ${{ github.event.inputs.releaseit_extra_args }}
