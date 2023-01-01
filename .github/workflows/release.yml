@@ -30,6 +30,12 @@ jobs:
       - name: Run tests
         run: yarn ci
 
+      - name: Print release bump
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          NPM_TOKEN: ${{ secrets.NPM_TOKEN }}
+        run: npx release -- ${{ github.event.inputs.releaseit_extra_args }} --release-version
+
       - name: Release
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
