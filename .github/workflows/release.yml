@@ -34,10 +34,10 @@ jobs:
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           NPM_TOKEN: ${{ secrets.NPM_TOKEN }}
-        run: npx release -- ${{ github.event.inputs.releaseit_extra_args }} --release-version
+        run: npm run release -- ${{ github.event.inputs.releaseit_extra_args }} --release-version
 
       - name: Release
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           NPM_TOKEN: ${{ secrets.NPM_TOKEN }}
-        run: npx release -- ${{ github.event.inputs.releaseit_extra_args }}
+        run: npm run release -- ${{ github.event.inputs.releaseit_extra_args }}
