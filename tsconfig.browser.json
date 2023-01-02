@@ -5,6 +5,7 @@
     "allowJs": true,
     "target": "ES2019",
     "module": "CommonJS",
-    "outDir": "./dist/browser"
+    "outDir": "./dist/browser",
+    "lib": ["ESNext", "DOM"]
   }
 }
