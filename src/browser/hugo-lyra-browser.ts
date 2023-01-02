@@ -56,17 +56,18 @@ export const HugoLyra = () => {
     },
 
     /**
+     * Read the remote index file and return the lyra index.
      *
-     * @param path
+     * @param url Url of the lyra index.
      * @returns
      */
-    bootstrap: async function (path: string): Promise<lyra.Lyra<{ __placeholder: "string" }>> {
+    bootstrap: async function (url: string): Promise<lyra.Lyra<{ __placeholder: "string" }>> {
       const db = lyra.create({
         schema: {
           __placeholder: "string",
         },
       });
-      const res = await fetch(path);
+      const res = await fetch(url);
       if (!res.ok) {
         throw res.statusText;
       }
