@@ -863,13 +863,6 @@
   resolved "https://registry.npmjs.org/@types/semver/-/semver-7.3.13.tgz"
   integrity sha512-21cFJr9z3g5dW8B0CVI9g2O9beqaThGQ6ZFBqHfwhzLDKUxaqTIy3vnfah/UPkfOiF2pLq+tGz+W8RyCskuslw==
 
-"@types/striptags@^3.1.1":
-  version "3.1.1"
-  resolved "https://registry.npmjs.org/@types/striptags/-/striptags-3.1.1.tgz"
-  integrity sha512-t11pzegWB32MpVjCMXD0LoSxsUQESC7CInDtVoEmnPbLWA5hMRSLBa0U/xCOdj6zFQyHlLn0Qmp76kyp/KyfQw==
-  dependencies:
-    striptags "*"
-
 "@types/tap@^15.0.7":
   version "15.0.7"
   resolved "https://registry.npmjs.org/@types/tap/-/tap-15.0.7.tgz"
@@ -5857,7 +5850,7 @@ strip-json-comments@~2.0.1:
   resolved "https://registry.npmjs.org/strip-json-comments/-/strip-json-comments-2.0.1.tgz"
   integrity sha512-4gB8na07fecVVkOI6Rs4e7T6NOTki5EmL7TUduTs6bu3EdnSycntVJ4re8kgZA+wx9IueI2Y11bfbgwtzuE0KQ==
 
-striptags@*, striptags@^3.2.0:
+striptags@^3.2.0:
   version "3.2.0"
   resolved "https://registry.npmjs.org/striptags/-/striptags-3.2.0.tgz"
   integrity sha512-g45ZOGzHDMe2bdYMdIvdAfCQkCTDMGBazSw1ypMowwGIee7ZQ5dU0rBJ8Jqgl+jAKIv4dbeE1jscZq9wid1Tkw==
