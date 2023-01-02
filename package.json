@@ -5,8 +5,9 @@
   "main": "./dist/cjs/hugo-lyra.js",
   "module": "./dist/esm/hugo-lyra.js",
   "types": "./dist/esm/hugo-lyra.d.ts",
+  "browser": "./dist/browser/hugo-lyra.js",
   "bin": {
-    "hugo-lyra": "dist/cjs/cli.js"
+    "hugo-lyra": "./dist/cjs/cli.js"
   },
   "files": [
     "dist"
@@ -22,7 +23,8 @@
     "build": "npm run build:all",
     "build:cjs": "tsc --project tsconfig.cjs.json",
     "build:module": "tsc --project tsconfig.esm.json",
-    "build:all": "rimraf ./dist && concurrently 'npm:build:module' 'npm:build:cjs'",
+    "build:browser:esbuild": "esbuild src/browser/hugo-lyra-browser.ts --bundle --outfile=dist/browser/hugo-lyra.js --minify --external:node:*",
+    "build:all": "rimraf ./dist && concurrently 'npm:build:module' 'npm:build:cjs' 'npm:build:browser:esbuild'",
     "ci": "npm run build && npm run test:ci",
     "release": "release-it"
   },
@@ -55,17 +57,18 @@
   "devDependencies": {
     "@release-it/conventional-changelog": "^5.1.1",
     "@types/debug": "^4.1.7",
+    "@types/dompurify": "^2.4.0",
     "@types/html-to-text": "^8.1.1",
     "@types/lodash": "^4.14.191",
     "@types/marked": "^4.0.8",
     "@types/node": "^18.11.17",
-    "@types/striptags": "^3.1.1",
     "@types/tap": "^15.0.7",
     "@typescript-eslint/eslint-plugin": "^5.47.0",
     "@typescript-eslint/parser": "^5.47.0",
     "c8": "^7.12.0",
     "commitizen": "^4.2.6",
     "concurrently": "^7.6.0",
+    "esbuild": "^0.16.12",
     "eslint": "^8.30.0",
     "husky": "^8.0.2",
     "lint-staged": "^13.1.0",
@@ -86,6 +89,7 @@
     "isomorphic-dompurify": "^0.24.0",
     "lodash": "^4.17.21",
     "marked": "^4.2.5",
+    "node-fetch": "^3.3.0",
     "pino": "^8.8.0",
     "pino-pretty": "^9.1.1",
     "striptags": "^3.2.0",
