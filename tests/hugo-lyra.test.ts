@@ -87,15 +87,39 @@ t.test("Test create index", t => {
 });
 
 t.test("Calculate uri on index.md", t => {
-  t.plan(3);
+  t.plan(5);
   t.test("is the directory name when no slug or url is defined", t => {
     t.plan(1);
     const baseDir = "./tests/fixtures/posts/content";
     const filePath = "./tests/fixtures/posts/content/post-3-empty/index.md";
     const frontMatters = {};
     const res = calculateUri(baseDir, filePath, <HugoFrontMatter>frontMatters);
-    t.same("/content/post-3-empty", res);
+    t.same("/post-3-empty", res);
   });
+
+  t.test(
+    "is the directory name when no slug or url is defined and the directory is named content and file is index.md",
+    t => {
+      t.plan(1);
+      const baseDir = "./tests/fixtures/posts/content";
+      const filePath = "./tests/fixtures/posts/content/content/index.md";
+      const frontMatters = {};
+      const res = calculateUri(baseDir, filePath, <HugoFrontMatter>frontMatters);
+      t.same("/content", res);
+    },
+  );
+
+  t.test(
+    "is the directoryname/post when no slug or url is defined and the directory is named content and file is post.md",
+    t => {
+      t.plan(1);
+      const baseDir = "./tests/fixtures/posts/content";
+      const filePath = "./tests/fixtures/posts/content/content/post.md";
+      const frontMatters = {};
+      const res = calculateUri(baseDir, filePath, <HugoFrontMatter>frontMatters);
+      t.same("/content/post", res);
+    },
+  );
 
   t.test("is slug name when url is not defined", t => {
     t.plan(1);
@@ -105,7 +129,7 @@ t.test("Calculate uri on index.md", t => {
       slug: "hello-world",
     };
     const res = calculateUri(baseDir, filePath, <HugoFrontMatter>frontMatters);
-    t.same("/content/hello-world", res);
+    t.same("/hello-world", res);
   });
 
   t.test("is url name when url and slug are both defined", t => {
@@ -130,7 +154,7 @@ t.test("Calculate uri on post.md", t => {
     const filePath = "./tests/fixtures/posts/content/post-3-empty/post.md";
     const frontMatters = {};
     const res = calculateUri(baseDir, filePath, <HugoFrontMatter>frontMatters);
-    t.same("/content/post-3-empty/post", res);
+    t.same("/post-3-empty/post", res);
   });
 
   t.test("is directory/slug when slug is defined and url is not defined", t => {
@@ -142,7 +166,7 @@ t.test("Calculate uri on post.md", t => {
       slug: "hello-world",
     };
     const res = calculateUri(baseDir, filePath, <HugoFrontMatter>frontMatters);
-    t.same("/content/post-3-empty/hello-world", res);
+    t.same("/post-3-empty/hello-world", res);
   });
 
   t.test("is url when url is defined", t => {

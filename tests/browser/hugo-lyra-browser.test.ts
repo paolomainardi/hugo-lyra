@@ -2,10 +2,10 @@ import t from "tap";
 import { HugoLyra, HugoLyraBrowserOptions } from "../../src/browser/hugo-lyra-browser";
 import { create, insert, search } from "@lyrasearch/lyra";
 
-t.test("Hugo lyra browser implementation", t => {
+t.test("Test search", t => {
   t.plan(4);
 
-  t.test("Test with empty query parameter", t => {
+  t.test("should return undefined when querystring is empty", t => {
     t.plan(1);
 
     const db = create({
