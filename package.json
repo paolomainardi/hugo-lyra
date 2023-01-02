@@ -83,6 +83,7 @@
     "debug": "^4.3.4",
     "fast-glob": "^3.2.12",
     "gray-matter": "4.0.3",
+    "isomorphic-dompurify": "^0.24.0",
     "lodash": "^4.17.21",
     "marked": "^4.2.5",
     "pino": "^8.8.0",
