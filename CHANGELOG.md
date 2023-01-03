@@ -1,5 +1,12 @@
 # Changelog
 
+## [0.1.0-beta.2](https://github.com/paolomainardi/hugo-lyra/compare/0.1.0-beta.1...0.1.0-beta.2) (2023-01-03)
+
+
+### Bug Fixes
+
+* missing dep ([09df19f](https://github.com/paolomainardi/hugo-lyra/commit/09df19f8638296f1e94fe10f6795acdd59b73107))
+
 ## [0.1.0-beta.1](https://github.com/paolomainardi/hugo-lyra/compare/0.1.0-beta.0...0.1.0-beta.1) (2023-01-01)
 
 
