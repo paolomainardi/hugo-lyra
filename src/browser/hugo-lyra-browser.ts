@@ -2,6 +2,7 @@
 /// <reference lib="dom" />
 
 import * as lyra from "@lyrasearch/lyra";
+import { PropertiesSchema } from "@lyrasearch/lyra";
 import DOMPurify from "isomorphic-dompurify";
 import { filterObject } from "../lib/utils";
 
@@ -26,7 +27,7 @@ export const HugoLyra = () => {
           __placeholder: "string";
         };
       }>,
-      options: HugoLyraBrowserOptions,
+      options: HugoLyraBrowserOptions = {},
     ) {
       const defaultOpts: HugoLyraBrowserOptions = {
         queryString: typeof window !== "undefined" ? window.location.search : "",
@@ -57,21 +58,19 @@ export const HugoLyra = () => {
 
     /**
      * Read the remote index file and return the lyra index.
+     * @TODO: Use https://github.com/LyraSearch/plugin-data-persistence/blob/main/src/common/utils.ts
+     *        once it will be working on browser too. See issue: https://github.com/LyraSearch/plugin-data-persistence/pull/10
      *
      * @param url Url of the lyra index.
      * @returns
      */
-    bootstrap: async function (url: string): Promise<lyra.Lyra<{ __placeholder: "string" }>> {
+    bootstrap: function <T extends PropertiesSchema>(data: string | Buffer): lyra.Lyra<T> {
       const db = lyra.create({
         schema: {
           __placeholder: "string",
         },
       });
-      const res = await fetch(url);
-      if (!res.ok) {
-        throw res.statusText;
-      }
-      const deserialized = await res.json();
+      const deserialized = JSON.parse(data.toString());
       db.index = deserialized.index;
       db.defaultLanguage = deserialized.defaultLanguage;
       db.docs = deserialized.docs;
@@ -79,7 +78,7 @@ export const HugoLyra = () => {
       db.schema = deserialized.schema;
       db.frequencies = deserialized.frequencies;
       db.tokenOccurrencies = deserialized.tokenOccurrencies;
-      return db;
+      return db as unknown as lyra.Lyra<T>;
     },
   };
 };

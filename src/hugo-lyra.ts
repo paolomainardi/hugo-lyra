@@ -27,15 +27,18 @@ const HUGO_FRONT_MATTER_DELIMITER = "+++";
 export function calculateUri(basedir: string, filePath: string, frontMatter: HugoFrontMatter) {
   let uri = "/" + filePath.substring(0, filePath.lastIndexOf("."));
   uri = uri.replace(dirname(basedir) + "/", "");
+  uri = uri.replace(/^\/content/, "");
   if (uri.endsWith("index")) {
     uri = uri.substring(0, uri.lastIndexOf("index"));
   }
   if (frontMatter.slug != undefined) {
-    uri = `${path.dirname(uri)}/${frontMatter.slug}`;
+    uri = path.dirname(uri) !== "/" ? path.dirname(uri) : "";
+    uri += `/${frontMatter.slug}`;
   }
   if (frontMatter.url != undefined) {
     uri = `/${frontMatter.url}`;
   }
+
   // return without any trailing slash.
   return uri.replace(/\/$/, "");
 }
@@ -60,13 +63,13 @@ async function getPosts(baseDir: string): Promise<HugoPost[]> {
       },
     });
     if (data.tags?.length) {
-      data.tags = data.tags.join(",");
+      data.tags = data.tags.join(" ");
     }
     if (data.categories?.length) {
-      data.categories = data.categories.join(",");
+      data.categories = data.categories.join(" ");
     }
     if (data.keywords?.length) {
-      data.keywords = data.keywords.join(",");
+      data.keywords = data.keywords.join(" ");
     }
     const post: HugoPost = {
       title: data.title,

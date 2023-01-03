@@ -7,7 +7,7 @@ import pino from "pino";
 let logger = pino();
 
 interface CliOptions extends LyraOptions {
-  baseDir: string;
+  contents: string;
   help?: boolean;
   verbose?: boolean;
   prettyPrint?: boolean;
@@ -17,7 +17,7 @@ interface CliOptions extends LyraOptions {
   try {
     const args = parse<CliOptions>(
       {
-        baseDir: { type: String, description: "Hugo contents directory" },
+        contents: { type: String, description: "Hugo contents directory" },
         indexFilePath: { type: String, optional: true, description: "Path to store the Lyra index (default: public/)" },
         indexDefaultLang: {
           type: String,
@@ -50,7 +50,7 @@ interface CliOptions extends LyraOptions {
     logger = pino(loggerConf);
 
     // Generate index.
-    const res = await generateIndex(args.baseDir, {
+    const res = await generateIndex(args.contents, {
       indexFilePath: args.indexFilePath ?? undefined,
       indexDefaultLang: args.indexDefaultLang,
       indexFormat: args.indexFormat,
