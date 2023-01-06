@@ -35,14 +35,16 @@ export function HugoLyra() {
       if (!response.ok) {
         throw new Error(`Error fetching index on: ${url}`);
       }
+      const index = await response.text();
+      const db = this.restore(index);
+
+      // Save cache now that we are sure we can restore it.
       if (cacheAvailable && !cacheFound) {
         console.log(`Saving cache with key: ${url}`);
         const cache = await caches.open(url);
         const r = response.clone();
         await cache.put(url, r);
       }
-      const index = await response.text();
-      const db = this.restore(index);
       return db as lyra.Lyra<T>;
     },
 
