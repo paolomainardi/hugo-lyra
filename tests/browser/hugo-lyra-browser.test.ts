@@ -150,9 +150,12 @@ t.test("test fetchDb", t => {
         text: async () => {
           return jsonDB;
         },
-        clone: () => {
-          return jsonDB;
+        clone: (): any => {
+          return "";
         },
+      };
+      response["clone"] = () => {
+        return response;
       };
       return response;
     };
