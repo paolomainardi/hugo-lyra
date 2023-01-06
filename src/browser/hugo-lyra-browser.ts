@@ -16,11 +16,6 @@ export function HugoLyra() {
      * @returns
      */
     fetchDb: async function <T extends PropertiesSchema>(url: string, cache = true): Promise<lyra.Lyra<T>> {
-      /*if (HugoLyra.db) {
-        console.log("DB Found returning");
-        return HugoLyra.db;
-      }
-      */
       const cacheAvailable = "caches" in self && typeof caches !== "undefined" && cache;
       const request = new Request(url);
       let response: Response | undefined;
