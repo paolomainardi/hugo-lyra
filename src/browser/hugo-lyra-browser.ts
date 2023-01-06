@@ -4,72 +4,87 @@
 import * as lyra from "@lyrasearch/lyra";
 import { PropertiesSchema } from "@lyrasearch/lyra";
 import DOMPurify from "isomorphic-dompurify";
-import { filterObject } from "../lib/utils";
 
-export type HugoLyraBrowserOptions = {
-  queryString?: string;
-  param?: string;
-};
-
-export const HugoLyra = () => {
+export function HugoLyra() {
   return {
     lyra,
 
     /**
      *
-     * @param db Lyra database instance
-     * @param qparam Query string parameter
+     * @param url Url of the lyra file.
+     * @param cache Use the browser cache.
      * @returns
      */
-    search: function (
-      db: lyra.Lyra<{
-        schema: {
-          __placeholder: "string";
-        };
-      }>,
-      options: HugoLyraBrowserOptions = {},
-    ) {
-      const defaultOpts: HugoLyraBrowserOptions = {
-        queryString: typeof window !== "undefined" ? window.location.search : "",
-        param: "q",
-      };
-
-      // Remove all undefined, empty and not strings eleemn
-      const filterOptions = filterObject(options, ([_, val]) => {
-        _;
-        return typeof val === "string" && !!val;
-      });
-      const opts = { ...defaultOpts, ...filterOptions };
-      const params = new URLSearchParams(opts.queryString);
-      const query = params.get(opts.param ?? "q");
-      if (!query) {
-        return;
+    fetchDb: async function <T extends PropertiesSchema>(url: string, cache = true): Promise<lyra.Lyra<T>> {
+      /*if (HugoLyra.db) {
+        console.log("DB Found returning");
+        return HugoLyra.db;
       }
-      const sanitized = DOMPurify.sanitize(query);
-      const search = this.lyra.search(db, {
-        term: sanitized,
-        properties: "*",
-      });
+      */
+      const cacheAvailable = "caches" in self && typeof caches !== "undefined" && cache;
+      const request = new Request(url);
+      let response: Response | undefined;
+      let cacheFound = false;
+      if (cacheAvailable) {
+        response = await caches.match(url);
+        const tpl = `Cache %not found with key: ${url}`;
+        if (response) {
+          cacheFound = true;
+        }
+        const message = response ? tpl.replace("%not ", "") : tpl.replace("%", "");
+        console.log(message);
+      }
+      if (!response) {
+        response = await fetch(request);
+      }
+      if (!response.ok) {
+        throw new Error(`Error fetching index on: ${url}`);
+      }
+      if (cacheAvailable && !cacheFound) {
+        console.log(`Saving cache with key: ${url}`);
+        const cache = await caches.open(url);
+        const r = response.clone();
+        await cache.put(url, r);
+      }
+      const index = await response.text();
+      const db = this.restore(index);
+      return db as lyra.Lyra<T>;
+    },
+
+    /**
+     *
+     * @param db
+     * @param options
+     * @param sanitize
+     * @returns
+     */
+    search: function <T extends PropertiesSchema>(db: lyra.Lyra<T>, options: lyra.SearchParams<T>, sanitize = true) {
+      const clonedOps = { ...options };
+      if (sanitize) {
+        clonedOps.term = DOMPurify.sanitize(options.term);
+      }
+      const search = this.lyra.search(db, options);
       return {
         search,
-        q: sanitized,
+        options: clonedOps,
       };
     },
 
     /**
-     * Read the remote index file and return the lyra index.
+     * Read the remote index file and return the lyra index, it supports just JSON now.
      * @TODO: Use https://github.com/LyraSearch/plugin-data-persistence/blob/main/src/common/utils.ts
      *        once it will be working on browser too. See issue: https://github.com/LyraSearch/plugin-data-persistence/pull/10
      *
      * @param url Url of the lyra index.
      * @returns
      */
-    bootstrap: function <T extends PropertiesSchema>(data: string | Buffer): lyra.Lyra<T> {
+    restore: function <T extends PropertiesSchema>(data: string | Buffer): lyra.Lyra<T> {
       const db = lyra.create({
         schema: {
           __placeholder: "string",
         },
       });
+
       const deserialized = JSON.parse(data.toString());
       db.index = deserialized.index;
       db.defaultLanguage = deserialized.defaultLanguage;
@@ -81,7 +96,7 @@ export const HugoLyra = () => {
       return db as unknown as lyra.Lyra<T>;
     },
   };
-};
+}
 
 declare global {
   interface Window {

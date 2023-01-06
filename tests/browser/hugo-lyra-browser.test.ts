@@ -1,7 +1,28 @@
 import t from "tap";
-import { HugoLyra, HugoLyraBrowserOptions } from "../../src/browser/hugo-lyra-browser";
+import CacheMock from "browser-cache-mock";
+const cacheMock = new CacheMock();
+
+/* eslint-disable */
+let fetchMockFunction: any;
+const fetch: any = () => {
+  let emptyFetchResponse: Response = new Response();
+  if (fetchMockFunction) {
+    return fetchMockFunction();
+  }
+  return emptyFetchResponse;
+};
+global.fetch = fetch;
+
+// Mock cache object.
+global.caches = cacheMock as any;
+global.caches.open = async () => cacheMock;
+
+/* eslint-enable */
+
+import { HugoLyra } from "../../src/browser/hugo-lyra-browser";
 import { create, insert, Lyra, search } from "@lyrasearch/lyra";
 import { exportInstance } from "@lyrasearch/plugin-data-persistence";
+import "node-self";
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
 function generateTestDBInstance(): Lyra<any> {
@@ -41,7 +62,7 @@ t.test("Test bootstrap", t => {
     t.plan(1);
     const db = generateTestDBInstance();
     const serializedData = exportInstance(db, "json");
-    const dbRestored = HugoLyra().bootstrap(serializedData);
+    const dbRestored = HugoLyra().restore(serializedData);
     const qp1 = search(db, {
       term: "way",
     });
@@ -53,84 +74,149 @@ t.test("Test bootstrap", t => {
 });
 
 t.test("Test search", t => {
-  t.plan(4);
-
-  t.test("should return undefined when querystring is empty", t => {
-    t.plan(1);
-
-    const db = create({
-      schema: {
-        quote: "string",
-        author: "string",
-      },
-    });
-
-    const opts: HugoLyraBrowserOptions = {
-      queryString: "",
-    };
-    /* eslint-disable  @typescript-eslint/no-explicit-any */
-    const res = HugoLyra().search(db as any, opts);
-    t.same(undefined, res);
-  });
-
-  t.test("should return undefined when param is not part of querystring", t => {
-    t.plan(1);
-
-    const db = create({
-      schema: {
-        quote: "string",
-        author: "string",
-      },
-    });
-
-    const opts: HugoLyraBrowserOptions = {
-      queryString: "?q=foo",
-      param: "bar",
-    };
-    /* eslint-disable  @typescript-eslint/no-explicit-any */
-    const res = HugoLyra().search(db as any, opts);
-    t.same(undefined, res);
-  });
-
-  t.test("should return undefined when querystring and param are empty", t => {
-    t.plan(1);
-
-    const db = create({
-      schema: {
-        quote: "string",
-        author: "string",
-      },
-    });
-
-    const opts: HugoLyraBrowserOptions = {
-      queryString: "",
-      param: "",
-    };
-    const res = HugoLyra().search(db as any, opts);
-    t.same(undefined, res);
-  });
+  t.plan(2);
 
   t.test("should return a result when query string is valid", t => {
     t.plan(1);
 
-    const db = create({
-      schema: {
-        quote: "string",
-        author: "string",
-      },
-    });
-    insert(db, {
-      quote: "I am a great programmer",
-      author: "Bill Gates",
-    });
-    const opts: HugoLyraBrowserOptions = {
-      queryString: "?q=bill",
-    };
+    const db = generateTestDBInstance();
+
+    const searchOptions = { term: "bill" };
+
     /* eslint-disable  @typescript-eslint/no-explicit-any */
-    const res = HugoLyra().search(db as any, opts);
+    const res = HugoLyra().search(db as any, searchOptions);
     const qp1 = search(db, {
       term: "bill",
     });
     t.same(qp1.hits, res?.search.hits);
+  });
+
+  t.test("test sanitize", t => {
+    t.plan(3);
+
+    const db = generateTestDBInstance();
+
+    const searchOptions = { term: "<script> alert('foobar') </script> alice" };
+    const expected = "alice";
+
+    /* eslint-disable  @typescript-eslint/no-explicit-any */
+    const res = HugoLyra().search(db as any, searchOptions);
+    t.same(expected, res?.options.term);
+    t.notSame(searchOptions.term, res?.options.term);
+
+    /* eslint-disable  @typescript-eslint/no-explicit-any */
+    const res2 = HugoLyra().search(db as any, searchOptions, false);
+    t.same(searchOptions.term, res2?.options.term);
+  });
+});
+
+t.test("test fetchDb", t => {
+  t.plan(4);
+
+  t.test("raise an expcetion with a wrong url", async t => {
+    t.plan(1);
+    t.rejects(HugoLyra().fetchDb("not-working"));
+  });
+
+  t.test("raise an error because url does not work", async t => {
+    t.plan(1);
+
+    const { caches } = global;
+    global.caches = undefined as any;
+    t.teardown(() => (global.caches = caches) as any);
+
+    fetchMockFunction = () => {
+      const response = {
+        ok: false,
+      };
+      return response;
+    };
+    t.rejects(HugoLyra().fetchDb("https://www.example.com"));
+  });
+
+  t.test("return the fetch without cache", async t => {
+    t.plan(1);
+
+    const { caches } = global;
+    global.caches = undefined as any;
+    t.teardown(() => (global.caches = caches) as any);
+
+    const db = generateTestDBInstance();
+    const jsonDB = exportInstance(db, "json");
+
+    fetchMockFunction = () => {
+      const response = {
+        ok: true,
+        text: async () => {
+          return jsonDB;
+        },
+        clone: () => {
+          return jsonDB;
+        },
+      };
+      return response;
+    };
+    const res = await HugoLyra().fetchDb("https://www.hugo.lyra/index.json");
+    const rsearch = search(res, {
+      term: "bill",
+    });
+    t.same(1, rsearch.count);
+  });
+
+  t.test("return the fetch with cache", async t => {
+    t.plan(5);
+    const db = generateTestDBInstance();
+    const jsonDB = exportInstance(db, "json");
+
+    // Mock console.
+    const { log } = console;
+    t.teardown(() => (console.log = log) as any);
+    let logs = [] as any;
+    console.log = (...m) => logs.push(m as never);
+
+    fetchMockFunction = () => {
+      const response = {
+        ok: true,
+        text: async () => {
+          return jsonDB;
+        },
+        clone: (): any => {
+          return "";
+        },
+      };
+      response["clone"] = () => {
+        return response;
+      };
+      return response;
+    };
+
+    const url = "https://www.hugo.lyra/index.json?cache=1234";
+    const res = await HugoLyra().fetchDb(url);
+    const rsearch = search(res, {
+      term: "bill",
+    });
+    t.same(1, rsearch.count);
+
+    // now assert that cache is working.
+    const res2 = await HugoLyra().fetchDb(url);
+    const rsearch2 = search(res2, {
+      term: "bill",
+    });
+    t.same(1, rsearch2.count);
+    const expected = [
+      ["Cache not found with key: https://www.hugo.lyra/index.json?cache=1234"],
+      ["Saving cache with key: https://www.hugo.lyra/index.json?cache=1234"],
+      ["Cache found with key: https://www.hugo.lyra/index.json?cache=1234"],
+    ];
+    t.same(logs, expected);
+
+    // Now make another a call disabling cache.
+    logs = [];
+    const res3 = await HugoLyra().fetchDb(url, false);
+    const rsearch3 = search(res3, {
+      term: "bill",
+    });
+    t.same(1, rsearch3.count);
+    t.same(logs, []);
   });
 });
