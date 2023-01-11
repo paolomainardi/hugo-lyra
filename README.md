@@ -1,6 +1,6 @@
 # Hugo-Lyra
 
-\[!\[Tests\](https://github.com/paolomainardi/hugo-lyra/actions/workflows/tests.yml/badge.svg)\](https://github.com/paolomainardi/hugo-lyra/actions/workflows/tests.yml)
+[![Tests](https://github.com/paolomainardi/hugo-lyra/actions/workflows/tests.yml/badge.svg)](https://github.com/paolomainardi/hugo-lyra/actions/workflows/tests.yml)
 
 [Hugo][1] is a fantastic static site generator and, like most of them, is not natively capable of implementing a dynamic search engine like we are used to using on more traditional server-side platforms, with more or less advanced query capabilities.
 
