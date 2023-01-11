@@ -1,5 +1,7 @@
 # Changelog
 
+## [0.1.0](https://github.com/paolomainardi/hugo-lyra/compare/0.1.0-beta.4...0.1.0) (2023-01-11)
+
 ## [0.1.0-beta.4](https://github.com/paolomainardi/hugo-lyra/compare/0.1.0-beta.3...0.1.0-beta.4) (2023-01-06)
 
 
