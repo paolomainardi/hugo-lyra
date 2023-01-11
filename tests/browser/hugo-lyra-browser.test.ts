@@ -18,7 +18,6 @@ global.caches = cacheMock as any;
 global.caches.open = async () => cacheMock;
 
 /* eslint-enable */
-
 import { HugoLyra } from "../../src/browser/hugo-lyra-browser";
 import { create, insert, Lyra, search } from "@lyrasearch/lyra";
 import { exportInstance } from "@lyrasearch/plugin-data-persistence";

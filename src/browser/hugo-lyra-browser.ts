@@ -52,11 +52,12 @@ export function HugoLyra() {
     },
 
     /**
+     * Search on a Lyra index, it can also sanitize the query string term by default.
      *
-     * @param db
-     * @param options
-     * @param sanitize
-     * @returns
+     * @param db Lyra database
+     * @param options Lyra search options
+     * @param sanitize Sanitize the search term string
+     * @returns an object {search: SearchResult, options: SearchParams}
      */
     search: function <T extends PropertiesSchema>(db: lyra.Lyra<T>, options: lyra.SearchParams<T>, sanitize = true) {
       const clonedOps = { ...options };
