@@ -38,9 +38,7 @@ const hugoDb = create({
 You need to import the library from the CDN:
 
 ```html
-
 <script src=https://unpkg.com/hugo-lyra@latest/dist/browser/hugo-lyra.js></script>
-
 ```
 
 Or better using [Hugo Pipes][5] on your [base template][6]:
@@ -49,6 +47,12 @@ Or better using [Hugo Pipes][5] on your [base template][6]:
 {{ $script := resources.GetRemote https://unpkg.com/hugo-lyra@latest/dist/browser/hugo-lyra.js | minify | fingerprint }}
 <script src="{{ $script.RelPermalink }}" integrity="{{ $script.Data.Integrity }}"></script>
 ```
+
+{{< notice info >}}
+The client code bundles the Lyra search index code to ensure that generated index is compatible on the client and server side; you do not need to import it separately.
+
+The limitation of this approach is that you cannot change the Lyra version.
+{{< /notice >}}
 
 Once instantiated, you'll find a new global object on the `window.HugoLyra` global object you can use to implement your search engine.
 
