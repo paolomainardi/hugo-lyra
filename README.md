@@ -48,11 +48,8 @@ Or better using [Hugo Pipes][5] on your [base template][6]:
 <script src="{{ $script.RelPermalink }}" integrity="{{ $script.Data.Integrity }}"></script>
 ```
 
-{{< notice info >}}
-The client code bundles the Lyra search index code to ensure that generated index is compatible on the client and server side; you do not need to import it separately.
-
-The limitation of this approach is that you cannot change the Lyra version.
-{{< /notice >}}
+> The client **code bundles the Lyra search index** code to ensure that generated index is compatible on the client and server side; **you do not need to import it separately**.
+> **The limitation** of this approach is that you cannot change the Lyra version.
 
 Once instantiated, you'll find a new global object on the `window.HugoLyra` global object you can use to implement your search engine.
 
