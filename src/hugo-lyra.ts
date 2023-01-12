@@ -5,7 +5,7 @@ import { readFileSync } from "fs";
 import { debug } from "debug";
 import { plainText } from "./lib/text";
 import { create, insertBatch } from "@lyrasearch/lyra";
-import { persistToFile } from "@lyrasearch/plugin-data-persistence";
+import { PersistenceFormat, persistToFile } from "@lyrasearch/plugin-data-persistence";
 import { Language } from "@lyrasearch/lyra/dist/tokenizer";
 import { HugoFrontMatter, HugoPost, IndexResult, LyraDoc, LyraOptions } from "./types";
 import path, { dirname } from "path";
@@ -143,7 +143,7 @@ export async function generateIndex(baseDir: string, options: LyraOptions = {}):
   // Save documents.
   const file = await persistToFile(
     hugoDb,
-    opts.indexFormat,
+    opts.indexFormat as PersistenceFormat,
     `${opts.indexFilePath}/hugo-lyra-${opts.indexDefaultLang}.${
       opts.indexFormat == "binary" ? "msp" : opts.indexFormat
     }`,
