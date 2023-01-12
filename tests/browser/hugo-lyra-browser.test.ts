@@ -61,7 +61,7 @@ t.test("Test bootstrap", t => {
     t.plan(1);
     const db = await generateTestDBInstance();
     const serializedData = await exportInstance(db, "json");
-    const dbRestored = await HugoLyra().restore(serializedData, "json");
+    const dbRestored = await HugoLyra().restore(serializedData);
     const qp1 = await search(db, {
       term: "way",
     });
