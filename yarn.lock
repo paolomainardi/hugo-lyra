@@ -586,22 +586,17 @@
     "@jridgewell/resolve-uri" "3.1.0"
     "@jridgewell/sourcemap-codec" "1.4.14"
 
-"@lyrasearch/lyra@^0.3.1":
-  version "0.3.1"
-  resolved "https://registry.npmjs.org/@lyrasearch/lyra/-/lyra-0.3.1.tgz"
-  integrity sha512-c0k8R026nfXu/FhA9xgh7jo/+HM4I7XCn5J+us32mQEmqNBmGpD0CEyJ8PiJxmsDapyeYwpMNQgT2lNmnIL86w==
-
 "@lyrasearch/lyra@^0.4.1":
   version "0.4.1"
   resolved "https://registry.yarnpkg.com/@lyrasearch/lyra/-/lyra-0.4.1.tgz#759474b55eaad1294cc3f4952222a9aabba9a8d4"
   integrity sha512-ZGy+fD01PB/hmM0xvcSg/C/NQFmen04fLRNtSYPRpYvQelC6jdnhYNIX46qpfSBdxN0I1D0DcR1fmkw7aDLHoA==
 
-"@lyrasearch/plugin-data-persistence@^0.0.4":
-  version "0.0.4"
-  resolved "https://registry.npmjs.org/@lyrasearch/plugin-data-persistence/-/plugin-data-persistence-0.0.4.tgz"
-  integrity sha512-//LnHDVN41CTEWYvO/5iZ+75O57e9u6e2JDs/jB4NPSbQHY7HtYGK1pdAb2G516r2DubXaPesGtpXjiobwn8cA==
+"@lyrasearch/plugin-data-persistence@^0.0.5":
+  version "0.0.5"
+  resolved "https://registry.yarnpkg.com/@lyrasearch/plugin-data-persistence/-/plugin-data-persistence-0.0.5.tgz#51c3b8ba860466675ddaf2d417108a347ee95e25"
+  integrity sha512-F8dLkbL8iwEbSCVxTTZeQq8md1yrjNfOv3UXzcxQfqVOQQ2GzFzXjQ4OljUYa0YpkpELrOjqzW8OZuxe1v1WoA==
   dependencies:
-    "@lyrasearch/lyra" "^0.3.1"
+    "@lyrasearch/lyra" "^0.4.1"
     "@msgpack/msgpack" "^2.7.2"
     dpack "^0.6.22"
 

@@ -1,14 +1,15 @@
 // Thanks: https://stackoverflow.com/a/74112582
 /// <reference lib="dom" />
-
 import * as lyra from "@lyrasearch/lyra";
 import { SearchParams } from "@lyrasearch/lyra/dist/methods/search";
 import { Lyra, PropertiesSchema } from "@lyrasearch/lyra/dist/types";
 import DOMPurify from "isomorphic-dompurify";
+import { importInstance } from "@lyrasearch/plugin-data-persistence";
 
 export function HugoLyra() {
   return {
     lyra,
+    restore: importInstance,
 
     /**
      *
@@ -41,7 +42,7 @@ export function HugoLyra() {
       // to make it still available to the cache.
       const r = response.clone();
       const index = await r.text();
-      const db = await this.restore(index);
+      const db = await importInstance(index, "json");
 
       // Save cache now that we are sure we can restore it.
       if (cacheAvailable && !cacheFound) {
@@ -70,32 +71,6 @@ export function HugoLyra() {
         search,
         options: clonedOps,
       };
-    },
-
-    /**
-     * Read the remote index file and return the lyra index, it supports just JSON now.
-     * @TODO: Use https://github.com/LyraSearch/plugin-data-persistence/blob/main/src/common/utils.ts
-     *        once it will be working on browser too. See issue: https://github.com/LyraSearch/plugin-data-persistence/pull/10
-     *
-     * @param url Url of the lyra index.
-     * @returns
-     */
-    restore: async function <T extends PropertiesSchema>(data: string | Buffer): Promise<Lyra<T>> {
-      const db = await lyra.create({
-        schema: {
-          __placeholder: "string",
-        },
-      });
-
-      const deserialized = JSON.parse(data.toString());
-      db.index = deserialized.index;
-      db.defaultLanguage = deserialized.defaultLanguage;
-      db.docs = deserialized.docs;
-      db.nodes = deserialized.nodes;
-      db.schema = deserialized.schema;
-      db.frequencies = deserialized.frequencies;
-      db.tokenOccurrencies = deserialized.tokenOccurrencies;
-      return db as unknown as Lyra<T>;
     },
   };
 }

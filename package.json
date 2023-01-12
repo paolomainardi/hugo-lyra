@@ -83,7 +83,7 @@
   },
   "dependencies": {
     "@lyrasearch/lyra": "^0.4.1",
-    "@lyrasearch/plugin-data-persistence": "^0.0.4",
+    "@lyrasearch/plugin-data-persistence": "^0.0.5",
     "@types/glob": "^8.0.0",
     "debug": "^4.3.4",
     "fast-glob": "^3.2.12",

@@ -59,9 +59,9 @@ t.test("Test bootstrap", t => {
   t.plan(1);
   t.test("bootstrap return a lyra database", async t => {
     t.plan(1);
-    const db = (await generateTestDBInstance()) as any;
-    const serializedData = exportInstance(db, "json");
-    const dbRestored = await HugoLyra().restore(serializedData);
+    const db = await generateTestDBInstance();
+    const serializedData = await exportInstance(db, "json");
+    const dbRestored = await HugoLyra().restore(serializedData, "json");
     const qp1 = await search(db, {
       term: "way",
     });

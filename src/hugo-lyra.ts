@@ -6,7 +6,7 @@ import { debug } from "debug";
 import { plainText } from "./lib/text";
 import { create, insertBatch } from "@lyrasearch/lyra";
 import { persistToFile } from "@lyrasearch/plugin-data-persistence";
-import { Language } from "@lyrasearch/lyra/dist/esm/src/tokenizer/languages";
+import { Language } from "@lyrasearch/lyra/dist/tokenizer";
 import { HugoFrontMatter, HugoPost, IndexResult, LyraDoc, LyraOptions } from "./types";
 import path, { dirname } from "path";
 import { filterObject } from "./lib/utils";
@@ -105,7 +105,7 @@ export async function generateIndex(baseDir: string, options: LyraOptions = {}):
     return typeof val === "string" && !!val;
   });
   const opts = { ...defaultOpts, ...filterOptions };
-  const hugoDb = create({
+  const hugoDb = await create({
     schema: {
       title: "string",
       body: "string",
@@ -141,7 +141,7 @@ export async function generateIndex(baseDir: string, options: LyraOptions = {}):
   await insertBatch(hugoDb, docs);
 
   // Save documents.
-  const file = persistToFile(
+  const file = await persistToFile(
     hugoDb,
     opts.indexFormat,
     `${opts.indexFilePath}/hugo-lyra-${opts.indexDefaultLang}.${
