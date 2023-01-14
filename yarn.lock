@@ -591,6 +591,11 @@
   resolved "https://registry.npmjs.org/@lyrasearch/lyra/-/lyra-0.3.1.tgz"
   integrity sha512-c0k8R026nfXu/FhA9xgh7jo/+HM4I7XCn5J+us32mQEmqNBmGpD0CEyJ8PiJxmsDapyeYwpMNQgT2lNmnIL86w==
 
+"@lyrasearch/lyra@^0.4.1":
+  version "0.4.1"
+  resolved "https://registry.yarnpkg.com/@lyrasearch/lyra/-/lyra-0.4.1.tgz#759474b55eaad1294cc3f4952222a9aabba9a8d4"
+  integrity sha512-ZGy+fD01PB/hmM0xvcSg/C/NQFmen04fLRNtSYPRpYvQelC6jdnhYNIX46qpfSBdxN0I1D0DcR1fmkw7aDLHoA==
+
 "@lyrasearch/plugin-data-persistence@^0.0.4":
   version "0.0.4"
   resolved "https://registry.npmjs.org/@lyrasearch/plugin-data-persistence/-/plugin-data-persistence-0.0.4.tgz"

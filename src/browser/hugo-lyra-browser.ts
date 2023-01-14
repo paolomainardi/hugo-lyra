@@ -2,7 +2,8 @@
 /// <reference lib="dom" />
 
 import * as lyra from "@lyrasearch/lyra";
-import { PropertiesSchema } from "@lyrasearch/lyra";
+import { SearchParams } from "@lyrasearch/lyra/dist/methods/search";
+import { Lyra, PropertiesSchema } from "@lyrasearch/lyra/dist/types";
 import DOMPurify from "isomorphic-dompurify";
 
 export function HugoLyra() {
@@ -45,7 +46,7 @@ export function HugoLyra() {
         const r = response.clone();
         await cache.put(url, r);
       }
-      return db as lyra.Lyra<T>;
+      return db as Lyra<T>;
     },
 
     /**
@@ -55,12 +56,12 @@ export function HugoLyra() {
      * @param sanitize
      * @returns
      */
-    search: function <T extends PropertiesSchema>(db: lyra.Lyra<T>, options: lyra.SearchParams<T>, sanitize = true) {
+    search: async function <T extends PropertiesSchema>(db: Lyra<T>, options: SearchParams<T>, sanitize = true) {
       const clonedOps = { ...options };
       if (sanitize) {
         clonedOps.term = DOMPurify.sanitize(options.term);
       }
-      const search = this.lyra.search(db, options);
+      const search = await this.lyra.search(db, options);
       return {
         search,
         options: clonedOps,
@@ -75,8 +76,8 @@ export function HugoLyra() {
      * @param url Url of the lyra index.
      * @returns
      */
-    restore: function <T extends PropertiesSchema>(data: string | Buffer): lyra.Lyra<T> {
-      const db = lyra.create({
+    restore: async function <T extends PropertiesSchema>(data: string | Buffer): Promise<Lyra<T>> {
+      const db = await lyra.create({
         schema: {
           __placeholder: "string",
         },
@@ -90,7 +91,7 @@ export function HugoLyra() {
       db.schema = deserialized.schema;
       db.frequencies = deserialized.frequencies;
       db.tokenOccurrencies = deserialized.tokenOccurrencies;
-      return db as unknown as lyra.Lyra<T>;
+      return db as unknown as Lyra<T>;
     },
   };
 }
