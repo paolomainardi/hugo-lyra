@@ -16,7 +16,7 @@ export function HugoLyra() {
      * @param cache Use the browser cache.
      * @returns
      */
-    fetchDb: async function <T extends PropertiesSchema>(url: string, cache = true): Promise<lyra.Lyra<T>> {
+    fetchDb: async function <T extends PropertiesSchema>(url: string, cache = true): Promise<Lyra<T>> {
       const cacheAvailable = "caches" in self && typeof caches !== "undefined" && cache;
       const request = new Request(url);
       let response: Response | undefined;
@@ -37,7 +37,7 @@ export function HugoLyra() {
         throw new Error(`Error fetching index on: ${url}`);
       }
       const index = await response.text();
-      const db = this.restore(index);
+      const db = await this.restore(index);
 
       // Save cache now that we are sure we can restore it.
       if (cacheAvailable && !cacheFound) {

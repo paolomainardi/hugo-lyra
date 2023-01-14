@@ -1,7 +1,6 @@
 import t from "tap";
 import CacheMock from "browser-cache-mock";
 const cacheMock = new CacheMock();
-import { Lyra } from "@lyrasearch/lyra/dist/types";
 
 /* eslint-disable */
 let fetchMockFunction: any;
