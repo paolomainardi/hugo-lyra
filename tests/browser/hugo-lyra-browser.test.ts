@@ -18,7 +18,6 @@ global.caches = cacheMock as any;
 global.caches.open = async () => cacheMock;
 
 /* eslint-enable */
-
 import { HugoLyra } from "../../src/browser/hugo-lyra-browser";
 import { create, insert, search } from "@lyrasearch/lyra";
 import { exportInstance } from "@lyrasearch/plugin-data-persistence";
@@ -150,9 +149,12 @@ t.test("test fetchDb", t => {
         text: async () => {
           return jsonDB;
         },
-        clone: () => {
-          return jsonDB;
+        clone: (): any => {
+          return "";
         },
+      };
+      response["clone"] = () => {
+        return response;
       };
       return response;
     };

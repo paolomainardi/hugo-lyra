@@ -1,5 +1,14 @@
 # Changelog
 
+## [0.1.0](https://github.com/paolomainardi/hugo-lyra/compare/0.1.0-beta.4...0.1.0) (2023-01-11)
+
+## [0.1.0-beta.4](https://github.com/paolomainardi/hugo-lyra/compare/0.1.0-beta.3...0.1.0-beta.4) (2023-01-06)
+
+
+### Bug Fixes
+
+* response cloned object ([#19](https://github.com/paolomainardi/hugo-lyra/issues/19)) ([5f429bb](https://github.com/paolomainardi/hugo-lyra/commit/5f429bb658da419289f61edaadc6ad555580550a))
+
 ## [0.1.0-beta.3](https://github.com/paolomainardi/hugo-lyra/compare/0.1.0-beta.2...0.1.0-beta.3) (2023-01-06)
 
 ## [0.1.0-beta.2](https://github.com/paolomainardi/hugo-lyra/compare/0.1.0-beta.1...0.1.0-beta.2) (2023-01-03)
