@@ -64,8 +64,8 @@ t.test("Test create index", t => {
       indexFilePath: "/tmp",
     };
     const res = await generateIndex("./tests/fixtures/posts/content", options);
-    const restore = restoreFromFile("binary", res?.indexFilePath);
-    const qp1 = search(restore, {
+    const restore = await restoreFromFile("binary", res?.indexFilePath);
+    const qp1 = await search(restore, {
       term: "procrastination",
       properties: ["meta.tags"],
     });

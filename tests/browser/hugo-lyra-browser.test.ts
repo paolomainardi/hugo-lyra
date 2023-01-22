@@ -19,35 +19,35 @@ global.caches.open = async () => cacheMock;
 
 /* eslint-enable */
 import { HugoLyra } from "../../src/browser/hugo-lyra-browser";
-import { create, insert, Lyra, search } from "@lyrasearch/lyra";
+import { create, insert, search } from "@lyrasearch/lyra";
 import { exportInstance } from "@lyrasearch/plugin-data-persistence";
 import "node-self";
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
-function generateTestDBInstance(): Lyra<any> {
-  const db = create({
+async function generateTestDBInstance() {
+  const db = await create({
     schema: {
       quote: "string",
       author: "string",
     },
   });
 
-  insert(db, {
+  await insert(db, {
     quote: "I am a great programmer",
     author: "Bill Gates",
   });
 
-  insert(db, {
+  await insert(db, {
     quote: "Be yourself; everyone else is already taken.",
     author: "Oscar Wilde",
   });
 
-  insert(db, {
+  await insert(db, {
     quote: "I have not failed. I've just found 10,000 ways that won't work.",
     author: "Thomas A. Edison",
   });
 
-  insert(db, {
+  await insert(db, {
     quote: "The only way to do great work is to love what you do.",
     author: "Steve Jobs",
   });
@@ -57,15 +57,15 @@ function generateTestDBInstance(): Lyra<any> {
 
 t.test("Test bootstrap", t => {
   t.plan(1);
-  t.test("bootstrap return a lyra database", t => {
+  t.test("bootstrap return a lyra database", async t => {
     t.plan(1);
-    const db = generateTestDBInstance();
-    const serializedData = exportInstance(db, "json");
-    const dbRestored = HugoLyra().restore(serializedData);
-    const qp1 = search(db, {
+    const db = await generateTestDBInstance();
+    const serializedData = await exportInstance(db, "json");
+    const dbRestored = await HugoLyra().restore(serializedData);
+    const qp1 = await search(db, {
       term: "way",
     });
-    const qp2 = search(dbRestored, {
+    const qp2 = await search(dbRestored, {
       term: "way",
     });
     t.same(qp1.hits, qp2.hits);
@@ -75,36 +75,36 @@ t.test("Test bootstrap", t => {
 t.test("Test search", t => {
   t.plan(2);
 
-  t.test("should return a result when query string is valid", t => {
+  t.test("should return a result when query string is valid", async t => {
     t.plan(1);
 
-    const db = generateTestDBInstance();
+    const db = await generateTestDBInstance();
 
     const searchOptions = { term: "bill" };
 
     /* eslint-disable  @typescript-eslint/no-explicit-any */
-    const res = HugoLyra().search(db as any, searchOptions);
-    const qp1 = search(db, {
+    const res = await HugoLyra().search(db as any, searchOptions);
+    const qp1 = await search(db, {
       term: "bill",
     });
     t.same(qp1.hits, res?.search.hits);
   });
 
-  t.test("test sanitize", t => {
+  t.test("test sanitize", async t => {
     t.plan(3);
 
-    const db = generateTestDBInstance();
+    const db = await generateTestDBInstance();
 
     const searchOptions = { term: "<script> alert('foobar') </script> alice" };
     const expected = "alice";
 
     /* eslint-disable  @typescript-eslint/no-explicit-any */
-    const res = HugoLyra().search(db as any, searchOptions);
+    const res = await HugoLyra().search(db as any, searchOptions);
     t.same(expected, res?.options.term);
     t.notSame(searchOptions.term, res?.options.term);
 
     /* eslint-disable  @typescript-eslint/no-explicit-any */
-    const res2 = HugoLyra().search(db as any, searchOptions, false);
+    const res2 = await HugoLyra().search(db as any, searchOptions, false);
     t.same(searchOptions.term, res2?.options.term);
   });
 });
@@ -140,7 +140,7 @@ t.test("test fetchDb", t => {
     global.caches = undefined as any;
     t.teardown(() => (global.caches = caches) as any);
 
-    const db = generateTestDBInstance();
+    const db = await generateTestDBInstance();
     const jsonDB = exportInstance(db, "json");
 
     fetchMockFunction = () => {
@@ -159,7 +159,7 @@ t.test("test fetchDb", t => {
       return response;
     };
     const res = await HugoLyra().fetchDb("https://www.hugo.lyra/index.json");
-    const rsearch = search(res, {
+    const rsearch = await search(res, {
       term: "bill",
     });
     t.same(1, rsearch.count);
@@ -167,7 +167,7 @@ t.test("test fetchDb", t => {
 
   t.test("return the fetch with cache", async t => {
     t.plan(5);
-    const db = generateTestDBInstance();
+    const db = await generateTestDBInstance();
     const jsonDB = exportInstance(db, "json");
 
     // Mock console.
@@ -194,14 +194,14 @@ t.test("test fetchDb", t => {
 
     const url = "https://www.hugo.lyra/index.json?cache=1234";
     const res = await HugoLyra().fetchDb(url);
-    const rsearch = search(res, {
+    const rsearch = await search(res, {
       term: "bill",
     });
     t.same(1, rsearch.count);
 
     // now assert that cache is working.
     const res2 = await HugoLyra().fetchDb(url);
-    const rsearch2 = search(res2, {
+    const rsearch2 = await search(res2, {
       term: "bill",
     });
     t.same(1, rsearch2.count);
@@ -215,7 +215,7 @@ t.test("test fetchDb", t => {
     // Now make another a call disabling cache.
     logs = [];
     const res3 = await HugoLyra().fetchDb(url, false);
-    const rsearch3 = search(res3, {
+    const rsearch3 = await search(res3, {
       term: "bill",
     });
     t.same(1, rsearch3.count);

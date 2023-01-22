@@ -1,8 +1,9 @@
 // Thanks: https://stackoverflow.com/a/74112582
 /// <reference lib="dom" />
-
 import * as lyra from "@lyrasearch/lyra";
-import { PropertiesSchema } from "@lyrasearch/lyra";
+import { load } from "@lyrasearch/lyra";
+import { SearchParams } from "@lyrasearch/lyra/dist/methods/search";
+import { Lyra, PropertiesSchema } from "@lyrasearch/lyra/dist/types";
 import DOMPurify from "isomorphic-dompurify";
 
 export function HugoLyra() {
@@ -15,7 +16,7 @@ export function HugoLyra() {
      * @param cache Use the browser cache.
      * @returns
      */
-    fetchDb: async function <T extends PropertiesSchema>(url: string, cache = true): Promise<lyra.Lyra<T>> {
+    fetchDb: async function <T extends PropertiesSchema>(url: string, cache = true): Promise<Lyra<T>> {
       const cacheAvailable = "caches" in self && typeof caches !== "undefined" && cache;
       const request = new Request(url);
       let response: Response | undefined;
@@ -40,7 +41,7 @@ export function HugoLyra() {
       // to make it still available to the cache.
       const r = response.clone();
       const index = await r.text();
-      const db = this.restore(index);
+      const db = await this.restore(index);
 
       // Save cache now that we are sure we can restore it.
       if (cacheAvailable && !cacheFound) {
@@ -48,7 +49,7 @@ export function HugoLyra() {
         const cache = await caches.open(url);
         await cache.put(url, response);
       }
-      return db as lyra.Lyra<T>;
+      return db as Lyra<T>;
     },
 
     /**
@@ -59,12 +60,12 @@ export function HugoLyra() {
      * @param sanitize Sanitize the search term string
      * @returns an object {search: SearchResult, options: SearchParams}
      */
-    search: function <T extends PropertiesSchema>(db: lyra.Lyra<T>, options: lyra.SearchParams<T>, sanitize = true) {
+    search: async function <T extends PropertiesSchema>(db: Lyra<T>, options: SearchParams<T>, sanitize = true) {
       const clonedOps = { ...options };
       if (sanitize) {
         clonedOps.term = DOMPurify.sanitize(options.term);
       }
-      const search = this.lyra.search(db, options);
+      const search = await this.lyra.search(db, options);
       return {
         search,
         options: clonedOps,
@@ -79,22 +80,17 @@ export function HugoLyra() {
      * @param url Url of the lyra index.
      * @returns
      */
-    restore: function <T extends PropertiesSchema>(data: string | Buffer): lyra.Lyra<T> {
-      const db = lyra.create({
+    restore: async function <T extends PropertiesSchema>(data: string | Buffer): Promise<Lyra<T>> {
+      const db = await lyra.create({
+        edge: true,
         schema: {
           __placeholder: "string",
         },
       });
 
       const deserialized = JSON.parse(data.toString());
-      db.index = deserialized.index;
-      db.defaultLanguage = deserialized.defaultLanguage;
-      db.docs = deserialized.docs;
-      db.nodes = deserialized.nodes;
-      db.schema = deserialized.schema;
-      db.frequencies = deserialized.frequencies;
-      db.tokenOccurrencies = deserialized.tokenOccurrencies;
-      return db as unknown as lyra.Lyra<T>;
+      await load(db, deserialized);
+      return db as unknown as Lyra<T>;
     },
   };
 }
