@@ -20,7 +20,7 @@ global.caches.open = async () => cacheMock;
 /* eslint-enable */
 import { HugoLyra } from "../../src/browser/hugo-lyra-browser";
 import { create, insert, search } from "@lyrasearch/lyra";
-import { exportInstance } from "@lyrasearch/plugin-data-persistence";
+import { persist } from "@lyrasearch/plugin-data-persistence";
 import "node-self";
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
@@ -60,7 +60,7 @@ t.test("Test bootstrap", t => {
   t.test("bootstrap return a lyra database", async t => {
     t.plan(1);
     const db = await generateTestDBInstance();
-    const serializedData = await exportInstance(db, "json");
+    const serializedData = await persist(db, "json");
     const dbRestored = await HugoLyra().restore(serializedData);
     const qp1 = await search(db, {
       term: "way",
@@ -141,7 +141,7 @@ t.test("test fetchDb", t => {
     t.teardown(() => (global.caches = caches) as any);
 
     const db = await generateTestDBInstance();
-    const jsonDB = exportInstance(db, "json");
+    const jsonDB = persist(db, "json");
 
     fetchMockFunction = () => {
       const response = {
@@ -168,7 +168,7 @@ t.test("test fetchDb", t => {
   t.test("return the fetch with cache", async t => {
     t.plan(5);
     const db = await generateTestDBInstance();
-    const jsonDB = exportInstance(db, "json");
+    const jsonDB = persist(db, "json");
 
     // Mock console.
     const { log } = console;
