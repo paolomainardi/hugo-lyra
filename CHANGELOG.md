@@ -1,5 +1,12 @@
 # Changelog
 
+### [0.4.2](https://github.com/paolomainardi/hugo-lyra/compare/0.4.1...0.4.2) (2023-01-27)
+
+
+### Features
+
+* upgrade to lyra 0.4.2 ([#30](https://github.com/paolomainardi/hugo-lyra/issues/30)) ([a3a1d19](https://github.com/paolomainardi/hugo-lyra/commit/a3a1d19c698f4a6310683474e84480645639422e))
+
 ### [0.4.1](https://github.com/paolomainardi/hugo-lyra/compare/0.1.0...0.4.1) (2023-01-22)
 
 
