@@ -69,7 +69,7 @@
     "c8": "^7.12.0",
     "commitizen": "^4.2.6",
     "concurrently": "^7.6.0",
-    "esbuild": "^0.16.12",
+    "esbuild": "^0.18.0",
     "eslint": "^8.30.0",
     "husky": "^8.0.2",
     "lint-staged": "^13.1.0",
